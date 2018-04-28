@@ -4,7 +4,7 @@ import {withInfo} from '@storybook/addon-info';
 import {action} from '@storybook/addon-actions';
 import {boolean} from '@storybook/addon-knobs';
 
-import Button from 'sentry-ui/buttons/button';
+import Button from 'app/components/buttons/button';
 
 const Item = ({children}) => <span style={{padding: 12}}>{children}</span>;
 
