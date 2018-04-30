@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'react-emotion';
 import {withRouter} from 'react-router';
 import {Flex} from 'grid-emotion';
-
 import SentryTypes from '../../proptypes';
 import Link from '../../components/link';
 
@@ -11,6 +10,76 @@ import {Client} from '../../api';
 
 import {update} from '../../actionCreators/projects';
 import overflowEllipsis from '../../styles/overflowEllipsis';
+
+class PlatformList extends React.Component {
+  static propTypes = {
+    platforms: PropTypes.arrayOf(PropTypes.string),
+  };
+
+  getIcon(platform) {
+    return (
+      <StyledPlatformIconWrapper key={platform} className={platform}>
+        <StyledPlatformIcon className={`platformicon platformicon-${platform}`} />
+      </StyledPlatformIconWrapper>
+    );
+  }
+
+  getIcons(platforms) {
+    return (
+      <Flex direction="row-reverse" m={18}>
+        {platforms.map(this.getIcon)}
+      </Flex>
+    );
+  }
+  render() {
+    const {platforms} = this.props;
+
+    if (!platforms.length)
+      return (
+        <NoPlatforms align="center" p={2}>
+          No platforms yet
+        </NoPlatforms>
+      );
+
+    return (
+      <Flex align="center">
+        <div className="org-dashboard-platform-list">{this.getIcons(platforms)}</div>
+        <PlatformText>
+          {platforms
+            .slice()
+            .reverse()
+            .join(', ')}
+        </PlatformText>
+      </Flex>
+    );
+  }
+}
+
+const StyledPlatformIconWrapper = styled.span`
+  display: block;
+  margin-right: -14px;
+  margin-left: -2px;
+`;
+
+const StyledPlatformIcon = styled.span`
+  display: block;
+  color: white;
+  height: 34px;
+  width: 34px;
+  font-size: 22px;
+  border-radius: 4px;
+  border: 2px solid white;
+  padding: 4px;
+`;
+
+const PlatformText = styled.div`
+  color: ${p => p.theme.gray2};
+  font-size: 13px;
+`;
+
+const NoPlatforms = styled(Flex)`
+  height: 70px;
+`;
 
 class ProjectCard extends React.Component {
   static propTypes = {
@@ -45,6 +114,7 @@ class ProjectCard extends React.Component {
             onClick={this.toggleProjectBookmark}
           />
         </Flex>
+        <PlatformList platforms={project.platforms} />
       </StyledProjectCard>
     );
   }
